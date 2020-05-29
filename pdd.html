@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html lang="en/pl">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="programowanie dokumentów dynamicznych">
+	<meta name="keywords" content="learning, nauka">
+	<meta name="author" content="Szymon Dąbrowski">
+	<meta http-equiv="refresh" content="">
+	<title>PDD</title>
+<!-- css files -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/fontello.css" type="text/css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.metro-dark.css">
+  <!-- load jQuery and tablesorter scripts -->
+  <script type="text/javascript" src="js/jquery-latest.js"></script>
+  <script type="text/javascript" src="js/jquery.tablesorter.js"></script>
+  <!-- tablesorter widgets (optional) -->
+  <script type="text/javascript" src="js/jquery.tablesorter.widgets.js"></script>
+</head>
+
+<body>
+	<header>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
+			  <span class="navbar-toggler-icon"></span>
+			</button>
+      <!-- Nav Content -->
+      <div class="collapse navbar-collapse order-first" id="mainmenu">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="pdd.html">Strona główna</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" target="_blank" href="http://lcieszynski.zut.edu.pl/fileadmin/DPD/instrukcja_2019.pdf">Instrukcja</a>
+          </li>
+        </ul>
+      </div>
+      <!-- Nav Modal -->
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">
+        <i class="icon-basket"></i>
+      </button>
+    </nav> 
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content bg-dark">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Twój koszyk:</h4>
+            <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-12">
+                  <table id="tableKoszyk" class="tablesorter tablesorter-metro-dark">
+                    <thead>
+                      <tr>
+                        <th>Nazwa</th>
+                        <th>Cena (1 szt.)</th>
+                        <th>Liczba sztuk</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="row">
+                <label for="dostawa" class="col-4">Rodzaj dostawy:</label>
+                <div class="col-8">
+                  <select class="custom-select" id="dostawa" onChange="sprawdzIloscSztuk()" required>
+                    <option>Poczta 10zł</option>
+                    <option>Kurier 15zł</option>
+                    <option>Odbiór osobisty 0zł</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <bold>RAZEM:</bold>
+                </div>
+                <div id="razem" class="col-8"></div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" id="kup" class="btn btn-success"data-dismiss="modal">KUP</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Zamknij</button>
+          </div>
+        </div>
+      </div>
+    </div>
+	</header>
+
+	<main>
+		<div class="container-fluid" style="margin-top: 60px; margin-bottom: 60px;">
+      <div class="row" style="padding-top: 15px;">
+        <!-- First Col -->
+        <div class="col-lg-3">
+        </div>
+
+        <!-- Form Col -->
+        <div class="col-lg-6">
+          <form id="myForm" class="needs-validation" style="padding-bottom: 15px;" novalidate>
+            <div class="form-row mb-3">
+              <label for="name" class="col-sm-2">Nazwa produktu:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="Nazwa produktu" id="name" onBlur="sprawdzName()" required>
+                <div id="name_blad"></div>
+              </div>
+            </div>
+            <div class="form-row mb-3">
+              <label for="number" class="col-sm-2">Kod towaru:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="Kod towaru (wzór: xx-xx)" id="number" onBlur="sprawdzNumber()" required>
+                <div id="number_blad"></div>
+              </div>
+            </div>
+            <div class="form-row mb-3">
+                <label for="netto" class="col-sm-2">Cena netto:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="Cena  netto (zł)" onBlur="sprawdzNetto(), dodajBrutto()" id="netto" required>
+                  <div id="netto_blad"></div>
+                </div>
+            </div>
+            <div class="form-row mb-3">
+                <label for="vat" class="col-sm-2">Stawka VAT:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="Stawka VAT (%)" id="vat" onBlur="sprawdzVat(), dodajBrutto()" required>
+                  <div id="vat_blad"></div>
+                </div>
+            </div>
+            <div class="form-row mb-3">
+                <label for="brutto" class="col-sm-2">Cena brutto:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="Cena brutto (zł)" id="brutto" disabled>
+                </div>
+            </div>
+            <!-- Select -->
+            <div class="form-row mb-3">
+                <label for="kategoria" class="col-sm-2">Kategoria towarowa:</label>
+                <div class="col-sm-10">
+                  <select class="custom-select" id="kategoria" onChange="sprawdzKategoria()" required>
+                    <option selected disabled>Wybierz...</option>
+                    <option>Kategoria 1</option>
+                    <option>Kategoria 2</option>
+                    <option>Kategoria 3</option>
+                  </select>
+                  <div id="kategoria_blad"></div>
+                </div>
+            </div>
+            <!-- Options -->
+            <div class="row mb-3">
+              <div class="col-sm-2"> Opcje towaru: </div>
+              <div class="col-sm-10" onClick="sprawdzOpcje()">
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="opcja1" name="opcja">
+                  <label class="custom-control-label" for="opcja1">Opcja 1</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="opcja2" name="opcja">
+                  <label class="custom-control-label" for="opcja2">Opcja 2</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="opcja3" name="opcja">
+                  <label class="custom-control-label" for="opcja3">Opcja 3</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="opcja4" name="opcja">
+                  <label class="custom-control-label" for="opcja4">Opcja 4</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-inline">
+                  <input type="checkbox" class="custom-control-input" id="opcja5" name="opcja">
+                  <label class="custom-control-label" for="opcja5">Opcja 5</label>
+                </div>
+                <div id="opcje_blad"></div>
+              </div>
+            </div>
+            <!-- Rate -->
+            <div class="row mb-3">
+              <div class="col-sm-2"> Ocena: </div>
+              <div class="col-sm-10" onClick="sprawdzOcene()">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="optradio1" name="rate" required>
+                  <label class="custom-control-label" for="optradio1">1</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="optradio2" name="rate" required>
+                  <label class="custom-control-label" for="optradio2">2</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input is-valid" id="optradio3" name="rate" checked required>
+                  <label class="custom-control-label" for="optradio3">3</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="optradio4" name="rate" required>
+                  <label class="custom-control-label" for="optradio4">4</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input type="radio" class="custom-control-input" id="optradio5" name="rate" required>
+                  <label class="custom-control-label" for="optradio5">5</label>
+                </div>
+              </div>
+            </div>
+            <!-- Choose file -->
+            <div class="form-row mb-3">
+              <label for="image" class="col-sm-2">Wybierz zdjęcie:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" placeholder="Podaj ścieżkę pliku" id="image" onBlur="sprawdzImage()" value="/img/product.png">
+                <div id="image_blad"></div>
+              </div>
+            </div>
+            <!-- <div class="row custom-file mb-3">
+              <div class="col-12" style="width: 300px;">
+                <input type="file" class="custom-file-input" id="wyslij" style="cursor:pointer;">
+                <label class="custom-file-label" for="wyslij">Wybierz zdjęcie</label>
+              </div>
+            </div> -->
+            <!-- Submit button -->
+            <div class="row mb-3">
+              <div class="col-12">
+                <button type="button" id="buttonAdd" class="btn btn-dark col-2" onClick="sprawdzWszystko()">Dodaj</button>
+                <button type="button" id="buttonEdit" style="visibility: hidden;" class="btn btn-dark col-2">Edytuj</button>
+              </div>
+            </div>
+          </form>
+
+          <div class="row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-4">
+              <select class="custom-select" id="sortowanie" onChange="funSortowanie()">
+                <option>cena od najniższej</option>
+                <option>cena od najwyższej</option>
+                <option>ocena od najniższej</option>
+                <option>ocena od najwyższej</option>
+                <option selected>nazwa od A do Z</option>
+                <option>nazwa od Z do A</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <table id="myTable" class="tablesorter tablesorter-metro-dark">
+                <thead>
+                  <tr>
+                    <th>Nazwa</th>
+                    <th class="sorter-false">Kod</th>
+                    <th>Netto</th>
+                    <th class="sorter-false">VAT</th>
+                    <th>Brutto</th>
+                    <th class="sorter-false">Kategoria</th>
+                    <th class="sorter-false">Opcje</th>
+                    <th>Ocena</th>
+                    <th class="sorter-false">Zdjęcie</th>
+                    <th class="sorter-false">Przyciski</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Col -->
+        <div class="col-lg-3" style="padding-bottom: 15px;">
+          <div class="card bg-dark" style="width:fit-content;">
+            <img class="card-img-top" src="img\cv.jpg" alt="Card image">
+            <div class="card-body">
+              <h4 class="card-title">Szymon Dąbrowski</h4>
+              <p class="card-text">Frontend dev</p>
+              <a href="http://szymon.debno.com" class="btn btn-secondary">Zobacz profil</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+	<footer class="footer bg-dark">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    </br>FOOTER
+                </div>
+            </div>
+        </div>
+  </footer>
+  
+  <!-- js files -->
+  <script src="js/validator.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
