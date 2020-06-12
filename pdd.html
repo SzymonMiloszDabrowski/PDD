@@ -451,14 +451,44 @@
             </form>
 
             <div class="row">
-              <div class="col-sm-8">
+              <div class="col-sm-4">
                 <button
                   type="button"
-                  class="btn btn-dark col-sm-5"
+                  class="btn btn-dark"
                   onClick="wczytajDaneZPliku()"
                 >
                   Wczytaj dane z pliku
                 </button>
+              </div>
+              <div class="col-sm-1">
+                Widok:
+              </div>
+              <div class="col-sm-3">
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    name="wyborWidoku"
+                    class="custom-control-input"
+                    id="widokListy"
+                    onchange="zmienWidok()"
+                    checked
+                  />
+                  <label class="custom-control-label" for="widokListy"
+                    >lista</label
+                  >
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                  <input
+                    type="radio"
+                    name="wyborWidoku"
+                    class="custom-control-input"
+                    id="widokKafelek"
+                    onchange="zmienWidok()"
+                  />
+                  <label class="custom-control-label" for="widokKafelek"
+                    >kafelki</label
+                  >
+                </div>
               </div>
               <div class="col-sm-4">
                 <select
@@ -477,7 +507,16 @@
             </div>
 
             <div class="row">
-              <div class="col-12">
+              <div id="widokProduktow" class="col-12">
+                <div
+                  id="kafelki"
+                  class="row"
+                  style="
+                    visibility: hidden;
+                    text-align: center;
+                    margin-top: 25px;
+                  "
+                ></div>
                 <table id="myTable" class="tablesorter tablesorter-metro-dark">
                   <thead>
                     <tr>

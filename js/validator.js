@@ -268,11 +268,9 @@ function sprawdzIloscSztuk() {
   var razem = 0;
   var tabSztuki = document.getElementsByName("iloscSztuk");
   var tabCeny = document.getElementsByClassName("cena");
-  //zmienna pomocnicza do zaokraglania
-  var factor = Math.pow(10, 0);
   for (var i = 0; i < tabSztuki.length; i++) {
     //zaokraglanie sztuk do calosci
-    tabSztuki[i].value = Math.round(tabSztuki[i].value) / factor;
+    tabSztuki[i].value = Math.round(tabSztuki[i].value);
     //pozbywanie sie ujemnych sztuk
     if (tabSztuki[i].value < 0) {
       tabSztuki[i].value = 0;
@@ -280,8 +278,8 @@ function sprawdzIloscSztuk() {
     razem += tabCeny[i].innerHTML * tabSztuki[i].value;
   }
   //zaokraglanie sumy cen do 2 miejsc
-  factor = Math.pow(10, 2);
-  razem = Math.round(razem) / factor;
+  razem = Math.round((razem + Number.EPSILON) * 100) / 100;
+
   //dodawanie kosztow przesylki i wyswietlanie ceny
   if (document.getElementById("dostawa").options.selectedIndex == 0) {
     document.getElementById("razem").innerHTML = razem + 10 + " zł";
@@ -595,4 +593,24 @@ function wczytajDaneZPliku() {
           .trigger("update");
       }
     });
+}
+function zmienWidok() {
+  if (document.getElementById("myTable").style.visibility === "hidden") {
+    document.getElementById("myTable").style.visibility = "visible";
+    document.getElementById("kafelki").style.visibility = "hidden";
+    document.getElementById("kafelki").innerHTML = "";
+  } else {
+    document.getElementById("myTable").style.visibility = "hidden";
+    document.getElementById("kafelki").style.visibility = "visible";
+    for (let i = 1; i < document.getElementById("myTable").rows.length; i++) {
+      var name = document.getElementById("myTable").rows[i].cells[0].innerHTML;
+      var netto = document.getElementById("myTable").rows[i].cells[2].innerHTML;
+      var brutto = document.getElementById("myTable").rows[i].cells[4]
+        .innerHTML;
+      document.getElementById(
+        "kafelki"
+      ).innerHTML += `<div class="col-3" style="padding: 10px;">
+    <img src="img/product.png" alt="zdjecie produktu" height="150" width="150"/><br>${name}<br>${netto}zł (${brutto}zł)</div>`;
+    }
+  }
 }
