@@ -381,7 +381,9 @@ function edytujProdukt() {
   document.getElementById("vat").value = thisRow[3].innerHTML;
   document.getElementById("brutto").value = thisRow[4].innerHTML;
   document.getElementById("kategoria").value = thisRow[5].innerHTML;
-  document.getElementById("image").value = thisRow[8].innerHTML;
+  document.getElementById("image").value = $(thisRow[8])
+    .find("img")
+    .attr("src");
 
   //odznaczanie wszystkich opcji
   for (var i = 0; i < document.getElementsByName("opcja").length; i++) {
@@ -528,6 +530,8 @@ function funSortowanie() {
       t.trigger("sorton", [[[0, 1]]]);
       break;
   }
+  zmienWidok();
+  zmienWidok();
 }
 function wczytajDaneZPliku() {
   //pobieranie danych z pliku json
@@ -557,6 +561,7 @@ function wczytajDaneZPliku() {
         opcje = data[i][6];
         ocena = data[i][7];
         image = data[i][8];
+        if (image === undefined) image = `./img/product.png`;
         row =
           '<tr><td class="nameInTable">' +
           name +
@@ -577,7 +582,7 @@ function wczytajDaneZPliku() {
           "</td> <td>" +
           '<img src="' +
           image +
-          '" alt="zdjecie produktu" width="100" height="100"></img>' +
+          '" alt="zdjecie produktu" width="150" height="150"></img>' +
           '</td><td><button type="button" class="btn btn-danger" style="margin-bottom: 5px;" title="Usuń wiersz" onClick="usunProdukt()"><i class="icon-cancel"></i></button>' +
           " " +
           '<button type="button" class="btn btn-warning" style="margin-bottom: 5px;" title="Edytuj wiersz" onClick="edytujProdukt()"><i class="icon-pencil"></i></button>' +
@@ -595,22 +600,23 @@ function wczytajDaneZPliku() {
     });
 }
 function zmienWidok() {
-  if (document.getElementById("myTable").style.visibility === "hidden") {
+  if (document.getElementById("myTable").style.visibility === "collapse") {
     document.getElementById("myTable").style.visibility = "visible";
-    document.getElementById("kafelki").style.visibility = "hidden";
+    document.getElementById("kafelki").style.visibility = "collapse";
     document.getElementById("kafelki").innerHTML = "";
   } else {
-    document.getElementById("myTable").style.visibility = "hidden";
+    document.getElementById("myTable").style.visibility = "collapse";
     document.getElementById("kafelki").style.visibility = "visible";
     for (let i = 1; i < document.getElementById("myTable").rows.length; i++) {
       var name = document.getElementById("myTable").rows[i].cells[0].innerHTML;
       var netto = document.getElementById("myTable").rows[i].cells[2].innerHTML;
       var brutto = document.getElementById("myTable").rows[i].cells[4]
         .innerHTML;
+      var image = document.getElementById("myTable").rows[i].cells[8].innerHTML;
       document.getElementById(
         "kafelki"
-      ).innerHTML += `<div class="col-3" style="padding: 10px;">
-    <img src="img/product.png" alt="zdjecie produktu" height="150" width="150"/><br>${name}<br>${netto}zł (${brutto}zł)</div>`;
+      ).innerHTML += `<div class="col-xl-3 col-lg-4 col-sm-3 col-6" style="padding: 10px;">
+    ${image}<br>${name}<br>${netto}zł (${brutto}zł)</div>`;
     }
   }
 }
