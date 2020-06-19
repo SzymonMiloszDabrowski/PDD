@@ -5,7 +5,7 @@
     "250",
     "23",
     "307.5",
-    "Kategoria 1",
+    "Kategoria 3",
     "Opcja 1<br>Opcja 4<br>Opcja 5",
     "4/5",
     "./img/watch.jpg"
@@ -101,13 +101,14 @@
     "4/5"
   ],
   [
-    "produkt10",
-    "a1-a1",
-    "250",
+    "naszyjnik",
+    "xy-z1",
+    "50",
     "23",
-    "307.5",
-    "Kategoria 1",
-    "Opcja 4<br>Opcja 5",
-    "4/5"
+    "61.5",
+    "Kategoria 3",
+    "Opcja 1<br>Opcja 2",
+    "3/5",
+    "./img/necklace.jpg"
   ]
 ]

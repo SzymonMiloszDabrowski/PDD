@@ -561,7 +561,11 @@ function wczytajDaneZPliku() {
         opcje = data[i][6];
         ocena = data[i][7];
         image = data[i][8];
+
+        //jesli produkt nie ma zdjecia przypisuje domyslne
         if (image === undefined) image = `./img/product.png`;
+
+        //tworzenie wiersza w tabeli
         row =
           '<tr><td class="nameInTable">' +
           name +
@@ -600,13 +604,18 @@ function wczytajDaneZPliku() {
     });
 }
 function zmienWidok() {
+  //zmiana na widok listy
   if (document.getElementById("myTable").style.visibility === "collapse") {
     document.getElementById("myTable").style.visibility = "visible";
     document.getElementById("kafelki").style.visibility = "collapse";
     document.getElementById("kafelki").innerHTML = "";
+
+    //zmiana na widok kafelek
   } else {
     document.getElementById("myTable").style.visibility = "collapse";
     document.getElementById("kafelki").style.visibility = "visible";
+
+    //tworzenie widoku kafelek
     for (let i = 1; i < document.getElementById("myTable").rows.length; i++) {
       var name = document.getElementById("myTable").rows[i].cells[0].innerHTML;
       var netto = document.getElementById("myTable").rows[i].cells[2].innerHTML;
